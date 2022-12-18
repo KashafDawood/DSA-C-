@@ -102,6 +102,87 @@ public:
         }
     }
 
+    //remove method to remove any node in link list
+    void remove(int index){
+        //check parameter
+        if(index < 0 || index > totalNodes){
+            cout<<"[WARNING] INVALID INDEX"<<endl;
+        }
+
+        //new pointer to delete node
+        Node *temp = head;
+        if(index == 0){
+            head = head -> link;
+            free(temp);
+            totalNodes--;
+        }
+        
+        //traverse the index just befor the deleting node
+        for(int i = 0; temp != NULL && i < index - 1; i++){
+            temp = temp -> link;
+        }
+
+        // check if the temp or pointer reference is null or not
+        // if it is true it means that the node which is to be deleted is not present
+        if (temp == NULL || temp->link == NULL)
+        {
+            return;
+        }
+
+        //creating the link b/w temp and Node after the node that is deleted
+        Node *link = temp -> link -> link;
+
+        //delete the pointer refernce 
+        free(temp -> link);
+
+        // assign the newly created link(pointer refernce) to temp -> link
+        temp -> link = link;
+        totalNodes--;
+
+    }
+
+    //get method check weather node with this index exist
+    void get(int index){
+
+        //checking parameter
+        if(index < 0 || index >= this -> totalNodes){
+            cout<<"[WARNING] Index is out of bounds!"<<endl;
+        }
+
+        //iterate over node until we reach the index node
+        Node *current = this -> head;
+        for(int i = 0; i < index; i++){
+            current = current -> link;
+        }
+
+        cout<<"The node at index "<<index<<" is : "<<current -> data<<endl;
+
+    }
+
+    //check the node exist or not
+    int find(int data){
+        // Iterate through all nodes
+        // In the worst case we don't find the node and reach the end of the list
+        Node *curr = this->head;
+        for (int i = 0; i < this->totalNodes; i++)
+        {
+            // Check whether we found the data, if so return the index at which it lies
+            if (curr->data == data)
+            {
+                return i;
+            } else if(curr->link == NULL)
+            {
+                break;
+            }
+
+            curr = curr->link;
+        }
+        
+        // This means the loop terminated without finding the data
+        cout << "Could not find the node" << endl;
+        return -1;
+    }
+
     //display method
     void display(){
         //check for no node
@@ -131,6 +212,9 @@ int main(){
     L.insert(0, 0);
     L.insert(10, 7);
     L.insert(4, 4);
+    L.remove(0);
+    L.remove(2);
+    L.get(2);
     L.display();
     L.length();
 
