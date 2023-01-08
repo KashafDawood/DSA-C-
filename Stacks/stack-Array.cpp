@@ -46,6 +46,15 @@ public:
         totalNumber--;
     }
 
+    //peek method give the top item in the stack
+    void peek(){
+        //checking for the empty queue
+        if(totalNumber == 0){
+            return;
+        }
+        cout<<"The top item in the stack is : "<<arr[totalNumber-1]<<endl;
+    }
+
     //display method
     void display(){
         if(totalNumber > 0){
@@ -72,8 +81,10 @@ int main(){
     s.push(3);
     s.push(9);
     s.display();
+    s.peek();
     s.pop();
     s.display();
+    s.peek();
 
     return 0;
 }

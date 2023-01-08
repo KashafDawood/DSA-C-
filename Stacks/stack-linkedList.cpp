@@ -44,6 +44,7 @@ public:
         //check for the empty stack
         if(this -> top == NULL){
             this -> top = newNode;
+            Height++;
             return;
         }
         newNode -> next = this -> top;
