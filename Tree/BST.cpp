@@ -129,7 +129,7 @@ public:
                 // looking for child nodes
                 if (temp->left == NULL && temp->right == NULL)
                 {
-                    cout << "[INFO] We are deleting a leaf node" << endl;
+                    cout << "[INFO] We are deleting '"<<data<<"' which is a leaf node" << endl;
                     if (parent->left == temp)
                     {
                         parent->left = NULL;
@@ -143,7 +143,7 @@ public:
                 }
                 else if (temp->left == NULL || temp->right == NULL)
                 {
-                    cout << "[INFO] We are deleting parent node which have one child" << endl;
+                    cout << "[INFO] We are deleting '"<<data<<"' the parent node which have one child" << endl;
                     if (temp->left != NULL&&data<root->data)
                     {
                         parent->left = temp->left;
@@ -166,7 +166,7 @@ public:
                 }
                 else
                 {
-                    cout << "[INFO] Deleting Node which has two children" << endl;
+                    cout << "[INFO] Deleting '"<<data<<"' Node which has two children" << endl;
                     // in this case we need to find the pre-order successor.
                     Node *t = temp->right;
                     if (t->left == NULL && t->right == NULL)
@@ -199,25 +199,108 @@ public:
         return;
     }
 
-    // this display function uses in-order traversal left->root->right
-    /* here we are using stack data structure for traversing */
-    void display(){ 
-        stack<Node *> s;
+    //preorder root -> left -> right
+    void iterativePreorder(){
+        //check for empty tree
+        if(root == NULL){
+            cout<<"[WARNING] Tree is empty !"<<endl;
+            return;
+        }
+        cout<<"Preorder : ";
+        stack<Node *> nodeStack;
+        nodeStack.push(root);
+        /* Pop all items one by one. Do following for every popped item
+        a) print it
+        b) push its right child
+        c) push its left child
+        Note that right child is pushed first so that left is processed first */
+        while(nodeStack.empty() == false){
+            //pop root
+            Node *temp = nodeStack.top();
+            cout<<temp->data<<" ";
+            //pop
+            nodeStack.pop();
+            cout<<" ";
+
+            //push the right and the left childerns of the popped to stack
+            if(temp->right){
+                nodeStack.push(temp->right);
+            }
+            if(temp->left){
+                nodeStack.push(temp->left);
+            }
+        }
+        cout<<endl;
+    }
+
+    //postorder left -> right -> root
+    void iterativePostorder(){
+        //check for empty tree
+        if(root == NULL){
+            cout<<"[WARNING] Tree is empty !"<<endl;
+            return;
+        }
+        cout<<"Postorder : ";
+        //create two stacks
+        stack<Node *> s1, s2;
+
+        //push the root to the first stack
+        s1.push(root);
+        Node *temp;
+
+        //run the loop when stack 1 is not empty
+        while(!s1.empty()){
+            //pop an item from s1 and push to s2
+            temp = s1.top();
+            s1.pop();
+            s2.push(temp);
+
+            //push the right and left childern of the removed item of s1
+            if(temp->left){
+                s1.push(temp->left);
+            }
+            if(temp->right){
+                s1.push(temp->right);
+            }
+        }
+
+        //print all the elementof s2
+        while(!s2.empty()){
+            temp = s2.top();
+            s2.pop();
+            cout<<temp->data<<" ";
+        }
+        cout<<endl;
+    }
+
+    //inorder left -> root -> right
+    void iterativeInorder(){
+        //check for empty tree
+        if(root == NULL){
+            cout<<"[WARNING] Tree is empty !"<<endl;
+            return;
+        }
+
+        cout<<"inorder : ";
+        //create stack and the Node pointer
+        stack <Node *> s;
         Node *temp = root;
 
-        while (temp != NULL || s.empty() == false)
-        {
-
-            while (temp != NULL)
-            {
+        while(temp != NULL || s.empty() == false){
+            //another loop for reach the left most node
+            while(temp != NULL){
+                //push temp in stack
                 s.push(temp);
-                temp = temp->left; // going towards left first
+                temp = temp->left;
             }
-            temp = s.top();
-            cout << temp->data << "  "; // printing the left most data.
-            s.pop();
 
-            temp = temp->right; // going towards right.
+            //temp must be NULL at this point
+            temp = s.top();
+            s.pop();
+            cout<<temp->data<<" ";
+
+            //now visited the right nodes
+            temp = temp->right;
         }
     }
 
@@ -226,6 +309,14 @@ public:
 int main(){
 
     BinarySearchTree b;
+
+    /*
+            20
+           /  \
+          10  30 
+          /   / \
+         1   25 40 
+    */
     
     b.insert(20);
     b.insert(10);
@@ -233,11 +324,15 @@ int main(){
     b.insert(25);
     b.insert(40); 
     b.insert(1);
-    b.display();
+    b.iterativePreorder();
+    b.iterativePostorder();
+    b.iterativeInorder();
     cout<<endl;
     b.lookup(19);
     b.remove(20);
-    b.display();
+    b.iterativePreorder();
+    b.iterativePostorder();
+    b.iterativeInorder();
 
     return 0;
 }
